@@ -4,7 +4,7 @@ sqlalchemy
 pymysql
 pydantic-settings
 python-dotenv
-httpx
 pytest
 flake8
 requests
+httpx2
