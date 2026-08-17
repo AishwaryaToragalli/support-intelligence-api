@@ -6,19 +6,12 @@ from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "mysql+pymysql://support_user:support_password@localhost:3306/support_db"
+    "mysql+pymysql://support_user:support_password@localhost:3306/support_db",
 )
 
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True
-)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 

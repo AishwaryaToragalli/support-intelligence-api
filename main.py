@@ -11,10 +11,7 @@ from models import TicketModel
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(
-    title="Support Intelligence API",
-    version="1.0.0"
-)
+app = FastAPI(title="Support Intelligence API", version="1.0.0")
 
 
 class TicketCreate(BaseModel):
@@ -36,24 +33,13 @@ class TicketResponse(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {
-        "status": "healthy"
-    }
+    return {"status": "healthy"}
 
 
-@app.post(
-    "/tickets",
-    response_model=TicketResponse,
-    status_code=201
-)
-def create_ticket(
-    ticket: TicketCreate,
-    db: Session = Depends(get_db)
-):
+@app.post("/tickets", response_model=TicketResponse, status_code=201)
+def create_ticket(ticket: TicketCreate, db: Session = Depends(get_db)):
     new_ticket = TicketModel(
-        title=ticket.title,
-        description=ticket.description,
-        priority=ticket.priority
+        title=ticket.title, description=ticket.description, priority=ticket.priority
     )
 
     db.add(new_ticket)
@@ -63,35 +49,21 @@ def create_ticket(
     return new_ticket
 
 
-@app.get(
-    "/tickets",
-    response_model=list[TicketResponse]
-)
+@app.get("/tickets", response_model=list[TicketResponse])
 def get_tickets(db: Session = Depends(get_db)):
     return db.query(TicketModel).all()
 
 
-@app.get(
-    "/tickets/{ticket_id}",
-    response_model=TicketResponse
-)
-def get_ticket(
-    ticket_id: int,
-    db: Session = Depends(get_db)
-):
-    ticket = (
-        db.query(TicketModel)
-        .filter(TicketModel.id == ticket_id)
-        .first()
-    )
+@app.get("/tickets/{ticket_id}", response_model=TicketResponse)
+def get_ticket(ticket_id: int, db: Session = Depends(get_db)):
+    ticket = db.query(TicketModel).filter(TicketModel.id == ticket_id).first()
 
     if not ticket:
-        raise HTTPException(
-            status_code=404,
-            detail="Ticket not found"
-        )
+        raise HTTPException(status_code=404, detail="Ticket not found")
 
     return ticket
+
+
 @app.get("/")
 def read_root():
-    return {"status":"FastAPI is working successfully"}
+    return {"status": "FastAPI is working successfully"}
